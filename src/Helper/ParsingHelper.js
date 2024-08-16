@@ -2,34 +2,34 @@ import Node from "../Components/ClassLib/Node";
 
 const createMap = (movieInfo) => {
   const scheduleDetailMap = new Map();
-  for (const item of movieInfo) {
-    if (!scheduleDetailMap.has(item.date)) {
-      const venuesMap = new Map();
-      const screenMap = new Map();
-      screenMap.set(item.code, item);
-      venuesMap.set(item.venue_info, screenMap);
-      scheduleDetailMap.set(item.date, venuesMap);
-    } else {
-      if (!scheduleDetailMap.get(item.date).has(item.venue_info)) {
-        const screenMap = new Map();
-        screenMap.set(item.code, item);
-        scheduleDetailMap.get(item.date).set(item.venue_info, screenMap);
-      } else {
-        if (
-          !scheduleDetailMap.get(item.date).get(item.venue_info).has(item.code)
-        ) {
-          scheduleDetailMap
-            .get(item.date)
-            .get(item.venue_info)
-            .set(item.code, item);
-        }
-      }
-    }
-  }
+  const movieCodeCount = new Map();
 
-  const testData = Array.from(scheduleDetailMap, ([date, venue]) => ({
-    date: date,
-    venue: Array.from(venue, ([name, screens]) => ({
+  movieInfo.forEach((item) => {
+    const dateMap = scheduleDetailMap.has(item.date)
+      ? scheduleDetailMap.get(item.date)
+      : new Map();
+
+    const venueMap = dateMap.has(item.venue_info)
+      ? dateMap.get(item.venue_info)
+      : new Map();
+
+    let movieCode = item.code;
+    if (movieCodeCount.has(movieCode)) {
+      const count = movieCodeCount.get(movieCode);
+      movieCodeCount.set(movieCode, count + 1);
+      movieCode = `${movieCode}_${count + 1}`;
+    } else {
+      movieCodeCount.set(movieCode, 1);
+    }
+
+    venueMap.set(movieCode, item);
+    dateMap.set(item.venue_info, venueMap);
+    scheduleDetailMap.set(item.date, dateMap);
+  });
+
+  const testData = Array.from(scheduleDetailMap, ([date, venues]) => ({
+    date,
+    venue: Array.from(venues, ([name, screens]) => ({
       venueName: name,
       screens: Array.from(screens, ([screenName, screenInfo]) => ({
         screenTitle: screenName,
@@ -45,83 +45,86 @@ const createMap = (movieInfo) => {
     })),
   }));
 
-  let parsedScheduleIndex = 0;
-  const parsedSchedule = [];
-  testData.sort((a, b) => {
-    if (Date.parse(a.date) < Date.parse(b.date)) {
-      return -1;
-    } else {
-      return 1;
-    }
-  });
-  for (const item of testData) {
-    parsedSchedule[parsedScheduleIndex] = item;
-    parsedSchedule[parsedScheduleIndex].id = parsedScheduleIndex;
-    parsedSchedule[parsedScheduleIndex].venue.forEach((k, i) => {
-      k.id = i;
-      k.screens.forEach((kk, ii) => {
-        kk.customized = false;
-        kk.id = ii;
+  const parsedSchedule = testData
+    .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .map((item, index) => {
+      item.id = index;
+      item.venue.forEach((venue, i) => {
+        venue.id = i;
+        venue.screens.forEach((screen, ii) => {
+          screen.customized = false;
+          screen.id = ii;
+        });
       });
+      return item;
     });
-    parsedScheduleIndex++;
-  }
 
   return parsedSchedule;
 };
 
 const parseGridScreensHelper = async (lines) => {
   const movieInfo = [];
-  for (let i = 0; i < lines.length - 1; i++) {
-    const row = lines[i].split("\t");
 
-    for (const {} of row) {
-      let date = new Date(row[0]);
-      date =
-        date.toLocaleDateString("en-CA", { weekday: "long" }) +
-        ", " +
-        date.toLocaleDateString("en-CA", { month: "long", day: "numeric" });
-      const movie_name = row[1];
-      const code = row[2];
-      const screen_time_min = row[3];
-      const screen_time = row[4];
-      const movie_type = row[5];
-      const start_time = row[6];
-      const venue_info = row[7];
-      const page_number = row[8].replace("\r", "");
-      const movie_link = row[9];
+  lines.forEach((line, i) => {
+    if (i === lines.length - 1) return;
 
-      const node = new Node(
-        date,
-        movie_name,
-        code,
-        screen_time_min,
-        screen_time,
-        movie_type,
-        start_time,
-        venue_info,
-        page_number,
-        movie_link
-      );
+    const row = line.split("\t");
 
-      movieInfo[i] = node;
+    if (row.length < 10) {
+      console.error("Skipping invalid row:", row);
+      return;
     }
-  }
+
+    const [
+      dateStr,
+      movie_name,
+      code,
+      screen_time_min,
+      screen_time,
+      movie_type,
+      start_time,
+      venue_info,
+      page_number,
+      movie_link,
+    ] = row;
+
+    const date = new Date(dateStr);
+    const formattedDate =
+      date.toLocaleDateString("en-CA", { weekday: "long" }) +
+      ", " +
+      date.toLocaleDateString("en-CA", { month: "long", day: "numeric" });
+
+    const node = new Node(
+      formattedDate,
+      movie_name,
+      code,
+      screen_time_min,
+      screen_time,
+      movie_type,
+      start_time,
+      venue_info,
+      page_number.replace("\r", ""),
+      movie_link
+    );
+
+    movieInfo.push(node);
+  });
 
   return createMap(movieInfo);
 };
 
 const mapVenueNameHelper = async (parsedSchedule, parsedGridVenues) => {
-  const nextParsedSchedule = parsedSchedule.map((entry) => {
-    entry.venue.map((venueEntry) => {
-      venueEntry.venueName = parsedGridVenues.has(venueEntry.venueName)
-        ? parsedGridVenues.get(venueEntry.venueName)
-        : venueEntry.venueName;
-      return venueEntry;
+  return parsedSchedule.map((entry) => {
+    entry.venue = entry.venue.map((venueEntry) => {
+      return {
+        ...venueEntry,
+        venueName: parsedGridVenues.has(venueEntry.venueName)
+          ? parsedGridVenues.get(venueEntry.venueName)
+          : venueEntry.venueName,
+      };
     });
     return entry;
   });
-  return nextParsedSchedule;
 };
 
 export { parseGridScreensHelper, mapVenueNameHelper };

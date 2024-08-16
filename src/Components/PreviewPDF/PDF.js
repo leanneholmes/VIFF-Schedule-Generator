@@ -17,7 +17,8 @@ import AvantGarde from "../../resources/fonts/AvantGarde-Normal.ttf";
 
 // External import
 import React from "react";
-import { Page, Document, Font } from "@react-pdf/renderer";
+import { Page, Document, Font, View, Text } from "@react-pdf/renderer";
+import MyHeader from "./Header";
 
 Font.register({
   family: "Roboto",
@@ -79,25 +80,38 @@ Font.register({
   src: AvantGarde,
 });
 
-const chunkArray = (array, size) => {
+const chunkArray = (array, size, firstPageSize = null) => {
   const chunkedArray = [];
+
+  if (firstPageSize && array.length > 0) {
+    chunkedArray.push(array.slice(0, firstPageSize)); // First chunk with custom size
+    array = array.slice(firstPageSize); // Remaining array
+  }
+
   for (let i = 0; i < array.length; i += size) {
     chunkedArray.push(array.slice(i, i + size));
   }
+
   return chunkedArray;
 };
 
-// Create Document Component
 const MyDocument = (props) => {
-  const chunks = chunkArray(
-    props.data.parsedScheduleContext,
-    props.data.daysPerPage
-  );
+  const { parsedScheduleContext, daysPerPage } = props.data;
+
+  const chunks =
+    daysPerPage === 3
+      ? chunkArray(parsedScheduleContext, daysPerPage, 2)
+      : chunkArray(parsedScheduleContext, daysPerPage);
 
   return (
     <Document>
       {chunks.map((chunk, index) => (
         <Page size={2963} key={index}>
+          {index === 0 && (
+            <View>
+              <MyHeader />
+            </View>
+          )}
           {chunk.map((day, dayIndex) => (
             <Schedule
               key={dayIndex}

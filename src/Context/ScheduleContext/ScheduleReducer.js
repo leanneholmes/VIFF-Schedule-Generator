@@ -99,6 +99,7 @@ export default (state, action) => {
                           startTime: action.screen.startTime,
                           filmTitleText: action.screen.filmTitleText,
                           filmDetailsText: action.screen.filmDetailsText,
+                          movieLink: action.screen.movieLink,
                         };
                       } else {
                         return s;

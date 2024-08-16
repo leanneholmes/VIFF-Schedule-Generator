@@ -78,7 +78,7 @@ const ScheduleBox = (prop) => {
   const ScreenBoxstyles = reactCSS({
     default: {
       screenBox: {
-        height: "103.5%",
+        height: "103.8%",
         top: "-1.8px",
         position: "absolute",
         width: width,

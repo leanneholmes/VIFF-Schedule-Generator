@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import "../../css/Dashboard.css";
 
 import { Text, View, Link } from "@react-pdf/renderer";
@@ -22,17 +21,15 @@ const ScheduleBox = (prop) => {
     prop.color.filmBlock.g,
     prop.color.filmBlock.b
   );
-  // console.log("schedule box rgb:", prop.screen.colour);
-  // console.log("r:", prop.screen.colour.r);
+
   const r = prop.screen.colour.r;
   const g = prop.screen.colour.g;
   const b = prop.screen.colour.b;
-  // console.log(`rgb values: ${r}, ${g}, ${b}`);
+
   let width;
   let startPoint;
   const color = `8px solid rgb(${r}, ${g}, ${b})`;
   const screen = prop.screen;
-  // console.log(screen);
   const startTime = screen.startTime;
   const duration = screen.duration;
   const movieLink = screen.movieLink.trim();
@@ -47,7 +44,6 @@ const ScheduleBox = (prop) => {
   const boxNumInHour = 4;
   const boxMin = 15;
 
-  // getting a start point
   let hour = startTime.substr(0, startTime.indexOf(":"));
   let min = startTime.substr(
     startTime.indexOf(":") + 1,
@@ -62,8 +58,6 @@ const ScheduleBox = (prop) => {
   startPoint += "vw";
   startPoint = ((hour + min) / 64) * 100 * 0.81;
   startPoint += "vw";
-
-  // getting a width
 
   hour = duration.substr(0, duration.indexOf(":"));
   min = duration.substr(duration.indexOf(":") + 1, duration.indexOf(":"));
@@ -126,18 +120,29 @@ const ScheduleBox = (prop) => {
 
   return (
     <View style={ScreenBoxstyles.screenBox}>
-      <Link
-        src={`${movieLink}`}
-        style={{ textDecoration: "none" }}
-        target="_blank"
-      >
-        <Text style={filmTitleText} numberOfLines={1} ellipsizeMode="tail">
-          {screen.filmTitle}
-        </Text>
-        <Text style={filmDetailsText}>
-          {formattedTime} {durationMinutes}min p{screen.pageLocation}{" "}
-        </Text>
-      </Link>
+      {movieLink ? (
+        <Link
+          src={movieLink}
+          style={{ textDecoration: "none" }}
+          target="_blank"
+        >
+          <Text style={filmTitleText} numberOfLines={1} ellipsizeMode="tail">
+            {screen.filmTitle}
+          </Text>
+          <Text style={filmDetailsText}>
+            {formattedTime} {durationMinutes}min p{screen.pageLocation}{" "}
+          </Text>
+        </Link>
+      ) : (
+        <>
+          <Text style={filmTitleText} numberOfLines={1} ellipsizeMode="tail">
+            {screen.filmTitle}
+          </Text>
+          <Text style={filmDetailsText}>
+            {formattedTime} {durationMinutes}min p{screen.pageLocation}{" "}
+          </Text>
+        </>
+      )}
     </View>
   );
 };

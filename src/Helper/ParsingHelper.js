@@ -70,10 +70,10 @@ const parseGridScreensHelper = async (lines) => {
 
     const row = line.split("\t");
 
-    if (row.length < 10) {
-      console.error("Skipping invalid row:", row);
-      return;
-    }
+    // if (row.length < 9) {
+    //   console.error("Skipping invalid row:", row);
+    //   return;
+    // }
 
     const [
       dateStr,
@@ -85,7 +85,7 @@ const parseGridScreensHelper = async (lines) => {
       start_time,
       venue_info,
       page_number,
-      movie_link,
+      movie_link = "",
     ] = row;
 
     const date = new Date(dateStr);
@@ -104,7 +104,7 @@ const parseGridScreensHelper = async (lines) => {
       start_time,
       venue_info,
       page_number.replace("\r", ""),
-      movie_link
+      row.length === 10 ? movie_link : ""
     );
 
     movieInfo.push(node);

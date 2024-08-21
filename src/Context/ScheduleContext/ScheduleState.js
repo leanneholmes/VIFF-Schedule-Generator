@@ -108,6 +108,7 @@ const ScheduleState = (props) => {
       screenID: 0,
       display: false,
     },
+    movieLink: "",
   };
 
   const [state, dispatch] = useReducer(ScheduleReducer, initialState);

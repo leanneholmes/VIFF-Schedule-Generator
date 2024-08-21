@@ -211,6 +211,7 @@ const CustomBar = () => {
         variant="contained"
         onClick={() => {
           changeScreen();
+          closeMenu();
         }}
       >
         Change

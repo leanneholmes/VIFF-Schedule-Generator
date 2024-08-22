@@ -49,25 +49,45 @@ const FileUploader = ({
         const columns = fileColumn.length;
 
         let fileErrorMsg = "";
-        // for (let i = 0; i < lines.length; i++) {
-        //     if (lines[i].split('\t').length != columns && i != lines.length - 1 ||
-        //         columns == 1 && lines[i].split(' ').length != lines[0].split(' ').length && i != lines.length - 1) {
-        //         fileValidation = false;
+        for (let i = 0; i < lines.length; i++) {
+          if (
+            (lines[i].split("\t").length != columns && i != lines.length - 1) ||
+            (columns == 1 &&
+              lines[i].split(" ").length != lines[0].split(" ").length &&
+              i != lines.length - 1)
+          ) {
+            fileValidation = false;
 
-        //         const line = i + 1;
-        //         columns == 1 ?
-        //             (fileErrorMsg = 'line number ' + line + ' on ' + file.name + ' has ' +
-        //                 lines[i].split(' ').length + ' columns' +
-        //                 '\nThe file should have ' + lines[0].split(' ').length + ' columns') :
-        //             (fileErrorMsg = 'line number ' + line + ' on ' + file.name + ' has ' +
-        //                 lines[i].split('\t').length + ' columns' +
-        //                 '\nThe file should have ' + columns + ' columns');
+            const line = i + 1;
+            columns == 1
+              ? (fileErrorMsg =
+                  "line number " +
+                  line +
+                  " on " +
+                  file.name +
+                  " has " +
+                  lines[i].split(" ").length +
+                  " columns" +
+                  "\nThe file should have " +
+                  lines[0].split(" ").length +
+                  " columns")
+              : (fileErrorMsg =
+                  "line number " +
+                  line +
+                  " on " +
+                  file.name +
+                  " has " +
+                  lines[i].split("\t").length +
+                  " columns" +
+                  "\nThe file should have " +
+                  columns +
+                  " columns");
 
-        //         document.getElementById('fileValidation').innerHTML = fileErrorMsg;
-        //         document.getElementById('fileValidation').style.display = 'block';
-        //         icon = 'close';
-        //     }
-        // }
+            document.getElementById("fileValidation").innerHTML = fileErrorMsg;
+            document.getElementById("fileValidation").style.display = "block";
+            icon = "close";
+          }
+        }
         if (fileValidation == false) {
           setTrigger({
             message: "file validation fail",
@@ -203,7 +223,6 @@ const FileUploader = ({
       <div className="file-container">
         <div {...getRootProps({ className: "dropzone" })}>
           <input {...getInputProps()} />
-          {/* <MaterialIcon icon="upload_file" color='#17c9e9' size={64}/> */}
           <img src={require("../../assets/icons/cloud-computing.png")} />
           <p>
             Drag and drop files here, or <u>click here</u> to select files

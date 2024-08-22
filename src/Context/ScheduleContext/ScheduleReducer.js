@@ -9,6 +9,7 @@ import {
   SET_CUSTOM_ID,
   CLOSE_CUSTOM,
   CHANGE_SCREEN,
+  SET_BANNER_IMAGE,
 } from "../ActionType";
 
 export default (state, action) => {
@@ -115,6 +116,11 @@ export default (state, action) => {
             return d;
           }
         }),
+      };
+    case SET_BANNER_IMAGE:
+      return {
+        ...state,
+        bannerImage: action.image,
       };
     default:
       return state;

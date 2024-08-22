@@ -96,7 +96,7 @@ const chunkArray = (array, size, firstPageSize = null) => {
 };
 
 const MyDocument = (props) => {
-  const { parsedScheduleContext, daysPerPage } = props.data;
+  const { parsedScheduleContext, daysPerPage, bannerImage } = props.data;
 
   const chunks =
     daysPerPage === 3
@@ -109,7 +109,7 @@ const MyDocument = (props) => {
         <Page size={2963} key={index}>
           {index === 0 && (
             <View>
-              <MyHeader />
+              <MyHeader bannerImage={bannerImage} />
             </View>
           )}
           {chunk.map((day, dayIndex) => (

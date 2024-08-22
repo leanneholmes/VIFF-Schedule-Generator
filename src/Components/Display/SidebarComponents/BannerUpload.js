@@ -4,12 +4,14 @@ import {
   OutlinedInput,
   InputAdornment,
   IconButton,
+  Button,
 } from "@mui/material";
 import { useScheduleContext } from "../../../Context/ScheduleContext/ScheduleContext";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const BannerUpload = () => {
-  const { setBannerImage } = useScheduleContext();
+  const { setBannerImage, bannerImage } = useScheduleContext();
   const [imageName, setImageName] = useState("");
 
   const handleFileChange = (event) => {
@@ -22,6 +24,11 @@ const BannerUpload = () => {
       reader.readAsDataURL(file);
       setImageName(file.name);
     }
+  };
+
+  const handleRemoveImage = () => {
+    setBannerImage(null);
+    setImageName("");
   };
 
   return (
@@ -59,15 +66,33 @@ const BannerUpload = () => {
           }}
         />
       </FormControl>
+      {bannerImage && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "left",
+            marginTop: "10px",
+          }}
+        >
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={handleRemoveImage}
+            sx={{ width: "90%" }}
+          >
+            Remove Image
+          </Button>
+        </div>
+      )}
       <div
         style={{
           color: "grey",
-          marginTop: "10px",
-          fontStyle: "italic",
           fontSize: "0.9em",
+          fontStyle: "italic",
+          marginTop: "10px",
         }}
       >
-        Image width should be 12345px.
+        Image should be 12345px wide.
       </div>
     </>
   );

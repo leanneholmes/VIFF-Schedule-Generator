@@ -1,19 +1,24 @@
+import React from "react";
 import ScheduleEditable from "./ScheduleEditable";
 import { useScheduleContext } from "../../Context/ScheduleContext/ScheduleContext";
-import CalendarHeader from "../../assets/img/CalendarHeader_12345px.jpeg";
 
 const SchedulePreview = () => {
-  const scheduleContext = useScheduleContext();
+  const { bannerImage, gridScreenTimes } = useScheduleContext();
+
   return (
     <div className="schedule-preview-container">
       <div className="image-container">
-        <img
-          src={CalendarHeader}
-          alt="Calendar Header"
-          className="calendar-image"
-        />
+        {bannerImage ? (
+          <img
+            src={bannerImage}
+            alt="Calendar Header"
+            className="calendar-image"
+          />
+        ) : (
+          <></>
+        )}
       </div>
-      {scheduleContext.gridScreenTimes.map((day, index) => (
+      {gridScreenTimes.map((day, index) => (
         <ScheduleEditable key={index} data={day} />
       ))}
     </div>

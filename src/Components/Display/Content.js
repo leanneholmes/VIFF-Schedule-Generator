@@ -30,6 +30,7 @@ const Content = (props) => {
   const fontSettings = scheduleContext.fontSettings;
   const gridSettings = scheduleContext.gridLineSettings;
   const daysPerPage = scheduleContext.daysPerPage;
+  const bannerImage = scheduleContext.bannerImage;
 
   const CheckData = () => {
     if (scheduleContext.gridScreenTimes.length > 0) {
@@ -140,6 +141,7 @@ const Content = (props) => {
                       fontSettings,
                       gridSettings,
                       daysPerPage,
+                      bannerImage,
                     }}
                   />
                 </PDFViewer>

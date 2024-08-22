@@ -3,6 +3,7 @@ import colorSettings from "../../resources/colors.json";
 import ScheduleContext from "./ScheduleContext";
 import ScheduleReducer from "./ScheduleReducer";
 import { useCookies } from "react-cookie";
+import bannerImage from "../../assets/img/CalendarHeader_12345px.jpeg";
 
 import {
   PARSE_GRIDSCREENTIMES,
@@ -13,6 +14,7 @@ import {
   SET_GRIDLINE,
   SET_CUSTOM_ID,
   SET_DAYS_PER_PAGE,
+  SET_BANNER_IMAGE,
 } from "../ActionType";
 import {
   parseGridScreensHelper,
@@ -109,6 +111,7 @@ const ScheduleState = (props) => {
       display: false,
     },
     movieLink: "",
+    bannerImage: bannerImage,
   };
 
   const [state, dispatch] = useReducer(ScheduleReducer, initialState);
@@ -194,6 +197,13 @@ const ScheduleState = (props) => {
     });
   };
 
+  const setBannerImage = (image) => {
+    dispatch({
+      type: SET_BANNER_IMAGE,
+      image,
+    });
+  };
+
   return (
     <ScheduleContext.Provider
       value={{
@@ -203,6 +213,7 @@ const ScheduleState = (props) => {
         gridLineSettings: state.gridLineSettings,
         customBarTarget: state.customBarTarget,
         daysPerPage: state.daysPerPage,
+        bannerImage: state.bannerImage,
         parseGridScreens,
         mapVenueName,
         setDate,
@@ -211,6 +222,7 @@ const ScheduleState = (props) => {
         setGridLine,
         setCustomID,
         setDaysPerPage,
+        setBannerImage,
         dispatch,
       }}
     >

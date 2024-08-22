@@ -77,6 +77,7 @@ const ScheduleBox = (prop) => {
         position: "absolute",
         width: width,
         marginLeft: startPoint,
+        transform: "translateX(-2px)",
         backgroundColor: "#" + filmBlockColor,
         fontFamily: "Helvetica",
         borderTop: "3px solid black",

@@ -144,6 +144,7 @@ const FileUploader = ({
     });
     setParsedGridVenues(gridVenues);
   };
+
   // parsed Colour file
   const parsedColour = (lines) => {
     const colourMap = new Map();

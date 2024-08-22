@@ -70,10 +70,10 @@ const parseGridScreensHelper = async (lines) => {
 
     const row = line.split("\t");
 
-    // if (row.length < 9) {
-    //   console.error("Skipping invalid row:", row);
-    //   return;
-    // }
+    if (row.length < 9) {
+      console.error("Skipping invalid row:", row);
+      return;
+    }
 
     const [
       dateStr,

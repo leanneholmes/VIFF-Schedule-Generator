@@ -17,7 +17,7 @@ import AvantGarde from "../../resources/fonts/AvantGarde-Normal.ttf";
 
 // External import
 import React from "react";
-import { Page, Document, Font, View, Text } from "@react-pdf/renderer";
+import { Page, Document, Font, View } from "@react-pdf/renderer";
 import MyHeader from "./Header";
 
 Font.register({
@@ -84,8 +84,8 @@ const chunkArray = (array, size, firstPageSize = null) => {
   const chunkedArray = [];
 
   if (firstPageSize && array.length > 0) {
-    chunkedArray.push(array.slice(0, firstPageSize)); // First chunk with custom size
-    array = array.slice(firstPageSize); // Remaining array
+    chunkedArray.push(array.slice(0, firstPageSize));
+    array = array.slice(firstPageSize);
   }
 
   for (let i = 0; i < array.length; i += size) {

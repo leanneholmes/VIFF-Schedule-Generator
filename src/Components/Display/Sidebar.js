@@ -17,6 +17,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MaterialIcon from "material-icons-react";
+import BannerUpload from "./SidebarComponents/BannerUpload";
 
 const Sidebar = () => {
   return (
@@ -109,7 +110,7 @@ const Sidebar = () => {
         </div>
         <div className="lineBreak"></div>
         <div className="sidebarBlock">
-          <Accordion disableGutters elevation={0} defaultExpanded={true}>
+          <Accordion disableGutters elevation={0} defaultExpanded={false}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon color="primary" />}
               aria-controls="panel1a-content"
@@ -128,6 +129,30 @@ const Sidebar = () => {
             </AccordionSummary>
             <AccordionDetails>
               <DaysPerPageSettings />
+            </AccordionDetails>
+          </Accordion>
+        </div>
+        <div className="lineBreak"></div>
+        <div className="sidebarBlock">
+          <Accordion disableGutters elevation={0} defaultExpanded={false}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon color="primary" />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <span className="sidebarHeader">
+                <span className="menu-icon">
+                  <MaterialIcon
+                    icon="add_photo_alternate"
+                    color="#000000"
+                    size={18}
+                  />
+                </span>
+                Banner Upload
+              </span>
+            </AccordionSummary>
+            <AccordionDetails>
+              <BannerUpload />
             </AccordionDetails>
           </Accordion>
         </div>
